@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"errors"
 	"log"
 )
@@ -105,7 +106,7 @@ func FordFulkerson(g Graph, source string, sink string) Graph {
 
 	path := g.findPath(source, sink, newPath, newPathSet)
 	for path != nil {
-		flow := float32(2147483647.0)
+		flow := math.MaxFloat32
 		for _, p := range path {
 			if p.residual > 0.0 && p.residual < flow {
 				flow = p.residual
@@ -117,9 +118,6 @@ func FordFulkerson(g Graph, source string, sink string) Graph {
 
 			g.flow[edge] = g.flow[edge] + flow
 			g.flow[*edge.redge] -= flow
-			if edge == *edge.redge {
-				panic("edge == reverse edge")
-			}
 		}
 
 		newPath = make([]ConnectedEdge, 0)
@@ -169,7 +167,7 @@ func main() {
 		log.Println("Vertex ", vertex)
 		for _, edge := range edges {
 			if edge.capacity > 0 {
-				log.Printf("Connected to %v with capcaity %v", edge.sink, edge.capacity)
+				log.Printf("Connected to %v with capacity %v", edge.sink, edge.capacity)
 			}
 		}
 	}
